@@ -6,12 +6,14 @@ require("dotenv").config();
 const PORT = process.env.PORT;
 const DB_URL = process.env.DB_URL;
 const courseRoute = require("./Routes/coursesRoutes");
+const userRoute = require("./Routes/userRoutes");
 const httpStatus = require("./utils/httpStatusText");
 
 app.use(cors());
 app.use(express.json());
 
-app.use("/courses", courseRoute);
+app.use("/api/courses", courseRoute);
+app.use("/api/users", userRoute);
 
 app.all("*", (req, res, next) => {
   return res
