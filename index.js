@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const { error } = require("node:console");
 require("dotenv").config();
 const PORT = process.env.PORT;
 const DB_URL = process.env.DB_URL;
