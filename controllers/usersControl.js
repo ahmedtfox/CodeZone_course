@@ -44,6 +44,7 @@ exports.register = asyncWrapper(async (req, res, next) => {
     email,
     password,
     role,
+    avatar: req.file.filename,
   });
 
   // generate token

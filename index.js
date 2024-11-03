@@ -8,6 +8,9 @@ const DB_URL = process.env.DB_URL;
 const courseRoute = require("./Routes/coursesRoutes");
 const userRoute = require("./Routes/userRoutes");
 const httpStatus = require("./utils/httpStatusText");
+const path = require("path");
+
+app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(cors());
 app.use(express.json());
@@ -16,6 +19,7 @@ app.use("/api/courses", courseRoute);
 app.use("/api/users", userRoute);
 
 app.all("*", (req, res, next) => {
+  console.log(req.url);
   return res
     .status(404)
     .json({ status: httpStatus.ERROR, message: "this resource not available" });
