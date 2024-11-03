@@ -27,8 +27,9 @@ exports.register = asyncWrapper(async (req, res, next) => {
   const lastName = req.body.lastName || false;
   const email = req.body.email || false;
   const passwordText = req.body.password || false;
+  const role = req.body.role || false;
 
-  if (!(firstName && lastName && email && passwordText)) {
+  if (!(firstName && lastName && email && passwordText && role)) {
     const error = appError.make("fields not found", 400, httpStatus.ERROR);
     return next(error);
   }
@@ -42,11 +43,16 @@ exports.register = asyncWrapper(async (req, res, next) => {
     lastName,
     email,
     password,
+    role,
   });
 
   // generate token
 
-  const token = generateJWT({ email: newUser.email, id: newUser._id });
+  const token = generateJWT({
+    email: newUser.email,
+    id: newUser._id,
+    role: role,
+  });
 
   newUser.token = token;
   const result = await newUser.save();
@@ -77,7 +83,11 @@ exports.login = asyncWrapper(async (req, res, next) => {
   }
 
   // logged in successfully
-  const token = generateJWT({ email: user.email, id: user._id });
+  const token = generateJWT({
+    email: user.email,
+    id: user._id,
+    role: user.role,
+  });
   return res.status(200).json({
     status: httpStatus.SUCCESS,
     data: { token },

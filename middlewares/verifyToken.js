@@ -11,6 +11,7 @@ function verifyToken(req, res, next) {
   const token = authHeader.split(" ")[1];
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    req.decodedToken = decodedToken;
     next();
   } catch (error) {
     const err = appError.make("invalid token", 401, httpStatus.ERROR);

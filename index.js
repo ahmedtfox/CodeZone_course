@@ -22,7 +22,7 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  return res.status(error.statusCose || 500).json({
+  return res.status(error.statusCode || 500).json({
     status: error.statusText,
     message: error.message,
     data: null,
