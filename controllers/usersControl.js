@@ -3,6 +3,8 @@ const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const generateJWT = require("../utils/generateJWT");
 
 exports.getAllUsers = asyncWrapper(async (req, res) => {
   const limit = +req.query.limit || 10;
@@ -42,6 +44,11 @@ exports.register = asyncWrapper(async (req, res, next) => {
     password,
   });
 
+  // generate token
+
+  const token = generateJWT({ email: newUser.email, id: newUser._id });
+
+  newUser.token = token;
   const result = await newUser.save();
 
   return res.status(200).json({ status: httpStatus.SUCCESS, data: result });
@@ -68,8 +75,11 @@ exports.login = asyncWrapper(async (req, res, next) => {
     const error = appError.make("something wrong", 500, httpStatus.ERROR);
     return next(error);
   }
+
+  // logged in successfully
+  const token = generateJWT({ email: user.email, id: user._id });
   return res.status(200).json({
     status: httpStatus.SUCCESS,
-    data: { user: "logged in success" },
+    data: { token },
   });
 });
